@@ -2,7 +2,6 @@ package com.ozanyazici.meowpedia.data.remote
 
 import com.ozanyazici.meowpedia.data.remote.dto.BreedsDto
 import com.ozanyazici.meowpedia.data.remote.dto.CatBreedImageDto
-import com.ozanyazici.meowpedia.util.Constants.API_KEY
 import com.ozanyazici.meowpedia.util.Constants.IMAGE_LIMIT
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,6 +18,6 @@ interface CatAPI {
     @GET("v1/images/search")
     suspend fun getCatBreedImage(
         @Query("limit") limit: String = IMAGE_LIMIT,
-        @Query("breed_ids") breedIds: String,
+        @Query("breed_ids") breedId: String,
     ): CatBreedImageDto
 }

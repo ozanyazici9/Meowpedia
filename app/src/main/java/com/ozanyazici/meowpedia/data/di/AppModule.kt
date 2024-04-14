@@ -1,6 +1,8 @@
 package com.ozanyazici.meowpedia.data.di
 
 import com.ozanyazici.meowpedia.data.remote.CatAPI
+import com.ozanyazici.meowpedia.data.repository.CatRepositoryImpl
+import com.ozanyazici.meowpedia.domain.repository.CatRepository
 import com.ozanyazici.meowpedia.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -22,5 +24,11 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(CatAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBreedRepository(api: CatAPI): CatRepository {
+        return CatRepositoryImpl(api = api)
     }
 }
