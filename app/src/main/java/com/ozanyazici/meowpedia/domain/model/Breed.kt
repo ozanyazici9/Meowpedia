@@ -8,5 +8,5 @@ data class Breed(
     val country_code: String,
     val description: String,
     val life_span: String,
-    val reference_image_id: String,
+    val reference_image_id: String?
 )

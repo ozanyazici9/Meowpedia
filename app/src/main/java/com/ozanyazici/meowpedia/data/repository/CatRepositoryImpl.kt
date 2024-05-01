@@ -13,6 +13,6 @@ class CatRepositoryImpl @Inject constructor(private val api: CatAPI) : CatReposi
     }
 
     override suspend fun getCatBreedImage(breedId: String): CatBreedImageDto {
-        return api.getCatBreedImage(breedIds = breedId)
+        return api.getCatBreedImage(breedId = breedId)
     }
 }

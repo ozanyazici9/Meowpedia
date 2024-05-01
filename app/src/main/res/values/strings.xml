@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Meowpedia</string>
+    <string name="sample_breed_name">Bengal</string>
 </resources>

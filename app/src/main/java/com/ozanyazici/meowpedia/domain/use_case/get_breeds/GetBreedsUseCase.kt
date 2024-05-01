@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOError
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class GetBreedsUseCase @Inject constructor(private val repository: CatRepository) {
@@ -27,6 +29,10 @@ class GetBreedsUseCase @Inject constructor(private val repository: CatRepository
             emit(Resource.Error(message = "Network error"))
         } catch (e: HttpException) {
             emit(Resource.Error(message = e.localizedMessage ?: "Http Error"))
+        } catch (e: UnknownHostException) {
+            emit(Resource.Error(message = "Unknown host error"))
+        } catch (e: SocketTimeoutException) {
+            emit(Resource.Error(message = "Socket timeout error"))
         }
     }
 }
