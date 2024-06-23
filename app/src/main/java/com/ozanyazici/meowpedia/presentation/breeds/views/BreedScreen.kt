@@ -69,9 +69,7 @@ import com.ozanyazici.meowpedia.presentation.breeds.BreedsEvent
 fun BreedScreen(navController: NavController, viewModel: BreedsViewModel = hiltViewModel()) {
 
     val state = viewModel.state.value
-
     val context = LocalContext.current
-
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     val openAlertDialog = remember {
@@ -144,31 +142,27 @@ fun BreedCard(
                 onCardClick(breed)
             }
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier =  Modifier.size(screenWidth * 0.4602f)
-        ) {
-            Box {
-                Image(
-                    painter = referenceImage!!,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(screenWidth * 0.4602f)
-                )
-                Text(
-                    text = breed.name,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier
-                        .padding(horizontal = 0.dp, vertical = 0.dp)
-                        .align(Alignment.BottomStart)
-                        .background(color = Color.White, shape = RoundedCornerShape(10.dp))
-                        .padding(3.dp)
+        Box {
+            Image(
+                painter = referenceImage!!,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(screenWidth * 0.4602f)
+            )
+            Text(
+                text = breed.name,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier
+                    .padding(horizontal = 0.dp, vertical = 0.dp)
+                    .align(Alignment.BottomStart)
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp))
+                    .padding(3.dp)
                 )
             }
         }
     }
-}
+
 
 @Composable
 fun BreedCardGrid(
@@ -186,7 +180,7 @@ fun BreedCardGrid(
     ) {
         items(state.breeds) {breed ->
             BreedCard(breed = breed, screenWidth = screenWidth, onCardClick = {
-                navController.navigate(Screen.BreedDetailScreen.route+"/${breed.id}"+"/${breed.name}"+"/${breed.origin}"+"/${breed.country_code}"+"/${breed.description}"+"/${breed.life_span}"+"/${breed.reference_image_id}")
+                navController.navigate(Screen.BreedDetailScreen.route+"/${breed.id}"+"/${breed.name}"+"/${breed.origin}"+"/${breed.country_code}"+"/${breed.description}"+"/${breed.life_span}"+"/${breed.reference_image_id}"+"/${breed.temperament}")
             })
         }
     }
@@ -198,10 +192,10 @@ fun AppTitle(
 ) {
     Text(
         stringResource(id = title),
-        style = MaterialTheme.typography.headlineLarge,
+        style = MaterialTheme.typography.labelMedium,
         modifier = Modifier
             .paddingFromBaseline(top = 30.dp, bottom = 2.dp)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 16.dp)
     )
 }
 

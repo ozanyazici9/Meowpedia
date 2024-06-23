@@ -63,20 +63,19 @@ val typography = Typography(
     labelMedium = TextStyle(
         fontFamily = fontFamilySurfer,
         fontWeight = FontWeight(500),
-        fontSize = 12.sp,
+        fontSize = 16.sp,
         lineHeight = 16.sp,
-        letterSpacing = (0.5).sp,
-        textAlign = TextAlign.Center
+        letterSpacing = (0.6).sp,
     ),
     labelLarge = TextStyle(
         fontFamily = fontFamilySurfer,
-        fontSize = 14.sp,
+        fontSize = 17.sp,
         lineHeight = 20.sp,
         letterSpacing = (0.1).sp
     ),
     headlineLarge = TextStyle(
         fontFamily = fontFamilySurfer,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         lineHeight = 20.sp,
         letterSpacing = (0.1).sp
     )

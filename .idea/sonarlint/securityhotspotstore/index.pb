@@ -78,3 +78,9 @@ I
 gradle/libs.versions.toml,d\7\d7595319a0658be6f1ed500ad590d42e4b28bc4f
 }
 Mapp/src/main/java/com/ozanyazici/meowpedia/presentation/breeds/BreedsEvent.kt,9\4\94bff4b1f9c9d914fce530b3af377fa285eed295
+@
+local.properties,0\7\0712df971a99ac4d2fccb8e0fb19f377f3374cca
+Œ
+\app/src/main/java/com/ozanyazici/meowpedia/presentation/breed_detail/BreedDetailInfoState.kt,6\5\6573010843b5072a6575a4d6c5cbc4a482d31e08
+X
+(gradle/wrapper/gradle-wrapper.properties,f\b\fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
