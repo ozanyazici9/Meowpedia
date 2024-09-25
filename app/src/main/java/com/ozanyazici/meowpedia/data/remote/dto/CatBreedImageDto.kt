@@ -5,5 +5,5 @@ import com.ozanyazici.meowpedia.domain.model.CatBreedImage
 class CatBreedImageDto : ArrayList<CatBreedImageDtoItem>()
 
 fun CatBreedImageDto.toCatBreedImageList(): List<CatBreedImage> {
-    return this.map { catBreedImageDtoItem -> CatBreedImage(catBreedImageDtoItem.url) }
+    return this.map { catBreedImageDtoItem -> CatBreedImage(catBreedImageDtoItem.url, catBreedImageDtoItem.width, catBreedImageDtoItem.height) }
 }

@@ -6,6 +6,6 @@ class BreedsDto : ArrayList<BreedsDtoItem>()
 
 fun BreedsDto.toBreedList(): List<Breed> {
     return this.map { breedsDtoItem ->
-        Breed(breedsDtoItem.id,breedsDtoItem.name,breedsDtoItem.temperament,breedsDtoItem.origin,breedsDtoItem.country_code,breedsDtoItem.description,breedsDtoItem.life_span,breedsDtoItem.reference_image_id)
+        Breed(breedsDtoItem.id,breedsDtoItem.name,breedsDtoItem.temperament,breedsDtoItem.origin,breedsDtoItem.country_code,breedsDtoItem.description,breedsDtoItem.life_span,breedsDtoItem.reference_image_id,breedsDtoItem.wikipedia_url)
     }
 }

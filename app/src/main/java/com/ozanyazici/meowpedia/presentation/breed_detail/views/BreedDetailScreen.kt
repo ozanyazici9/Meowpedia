@@ -1,72 +1,125 @@
 package com.ozanyazici.meowpedia.presentation.breed_detail.views
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.ozanyazici.meowpedia.domain.model.CatBreedImage
+import com.ozanyazici.meowpedia.R
+import com.ozanyazici.meowpedia.presentation.breed_detail.BreedDetailArgumentState
 import com.ozanyazici.meowpedia.presentation.breed_detail.BreedDetailImageState
-import com.ozanyazici.meowpedia.presentation.breed_detail.BreedDetailInfoState
 import com.ozanyazici.meowpedia.presentation.breed_detail.BreedDetailViewModel
-import com.ozanyazici.meowpedia.util.Constants
-
+import com.ozanyazici.meowpedia.util.BreedReferenceImageStateHolder
+import com.ozanyazici.meowpedia.util.Constants.BASE_URL_REFERENCE_IMAGE
 @Composable
-fun BreedDetailScreen(viewModel: BreedDetailViewModel = hiltViewModel()) {
+fun BreedDetailScreen(
+    viewModel: BreedDetailViewModel = hiltViewModel()
+) {
+    val breedArgumentState = viewModel.breedArgumentState.value
+    val breedImageState = viewModel.breedImageState.value
 
-    val state = viewModel.state.value
-    val stateInfo = viewModel.stateInfo.value
-    val screenWidt = LocalConfiguration.current.screenWidthDp.dp
-
-    BreedInfoScreen(stateInfo = stateInfo, state = state, screenWidth = screenWidt)
+    MainBreedInfoScreen(
+        breedArgumentState = breedArgumentState,
+        breedImageState = breedImageState,
+    )
 }
 
 @Composable
-fun CatBreedPictures(
+fun rememberBreedCardStateHolder() = remember {
+    BreedReferenceImageStateHolder()
+}
+
+@Composable
+fun CatBreedPicture(
     modifier: Modifier = Modifier,
-    catBreedImage: String?
+    breedArgumentState: BreedDetailArgumentState,
 ) {
+    val stateHolder = rememberBreedCardStateHolder()
+    stateHolder.UpdateReferenceImage(breedArgumentState.breedName, breedArgumentState.breedReferenceImageId)
+
     Column(
         modifier = modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Top
-    )
-    {
-        Image(painter = rememberAsyncImagePainter(model = Constants.BASE_URL_REFERENCE_IMAGE + catBreedImage + ".jpg"),
-            contentDescription = null,
+    ){
+        Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(475.dp),
+                .aspectRatio(0.8429f),
+            painter = stateHolder.referenceImage!!,
+            contentDescription = null,
             contentScale = ContentScale.Crop,
-        )
+            )
     }
+}
+
+@Composable
+fun BreedDescriptionText(breedArgumentState: BreedDetailArgumentState) {
+
+    val context = LocalContext.current
+    val annotatedText = buildAnnotatedString {
+
+        append(breedArgumentState.breedDescription)
+
+        pushStringAnnotation(tag = "more_info", annotation = breedArgumentState.breedWikipediaUrl)
+        withStyle(style = SpanStyle(color = Color.Magenta)) {
+            append(" More Info")
+        }
+        pop()
+    }
+
+    ClickableText(
+        text = annotatedText,
+        style = MaterialTheme.typography.labelMedium.copy(color = Color.Black),
+        modifier = Modifier.padding(top = 8.dp),
+        onClick = { offset ->
+            // Kullanıcı "More Info"ya tıkladığında çalışacak
+            annotatedText.getStringAnnotations(tag = "more_info", start = offset, end = offset)
+                .firstOrNull()?.let { annotation ->
+                    // Intent ile linke yönlendirme
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+                    context.startActivity(intent)
+                }
+        }
+    )
 }
 
 @Composable
 fun BreedInfo(
     modifier: Modifier = Modifier,
-    stateInfo: BreedDetailInfoState
+    breedArgumentState: BreedDetailArgumentState
 ) {
     Column(
         modifier = modifier
@@ -75,7 +128,7 @@ fun BreedInfo(
     )
     {
         Text(
-            text = stateInfo.breedName,
+            text = breedArgumentState.breedName,
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -90,13 +143,7 @@ fun BreedInfo(
                 .padding(top = 18.dp)
         )
 
-        Text(
-            text = stateInfo.breedDescription,
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.Black,
-            modifier = Modifier
-                .padding(top = 8.dp)
-        )
+        BreedDescriptionText(breedArgumentState = breedArgumentState)
 
         Text(
             text = "Temperament",
@@ -107,7 +154,7 @@ fun BreedInfo(
         )
 
         Text(
-            text = stateInfo.breedTemperament,
+            text = breedArgumentState.breedTemperament,
             style = MaterialTheme.typography.labelMedium,
             color = Color.Black,
             modifier = Modifier
@@ -123,7 +170,7 @@ fun BreedInfo(
         )
 
         Text(
-            text = stateInfo.breedOrigin,
+            text = breedArgumentState.breedOrigin,
             style = MaterialTheme.typography.labelMedium,
             color = Color.Black,
             modifier = Modifier
@@ -139,7 +186,7 @@ fun BreedInfo(
         )
 
         Text(
-            text = stateInfo.breedLifeSpan + " years",
+            text = breedArgumentState.breedLifeSpan + " years",
             style = MaterialTheme.typography.labelMedium,
             color = Color.Black,
             modifier = Modifier
@@ -151,7 +198,8 @@ fun BreedInfo(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .padding(top = 18.dp, bottom = 8.dp))
+                .padding(top = 18.dp, bottom = 8.dp)
+        )
     }
 }
 
@@ -166,11 +214,25 @@ fun BreedInfoSection(
 }
 
 @Composable
+fun MainBreedInfoScreen(
+    breedArgumentState: BreedDetailArgumentState,
+    breedImageState: BreedDetailImageState,
+) {
+    Scaffold(
+    ) { padding ->
+        BreedInfoScreen(
+            Modifier.padding(padding),
+            breedArgumentState = breedArgumentState,
+            breedImageState = breedImageState,
+        )
+    }
+}
+
+@Composable
 fun BreedInfoScreen(
     modifier: Modifier = Modifier,
-    stateInfo: BreedDetailInfoState,
-    state: BreedDetailImageState,
-    screenWidth: Dp
+    breedArgumentState: BreedDetailArgumentState,
+    breedImageState: BreedDetailImageState,
 ) {
     LazyColumn(
         modifier = modifier
@@ -178,54 +240,57 @@ fun BreedInfoScreen(
     ) {
         item {
             BreedInfoSection {
-                CatBreedPictures(catBreedImage = stateInfo.breedReferenceImageId)
+                CatBreedPicture(
+                    breedArgumentState = breedArgumentState,
+                )
             }
         }
         item {
             BreedInfoSection {
-                BreedInfo(stateInfo = stateInfo)
+                BreedInfo(
+                    breedArgumentState = breedArgumentState
+                )
             }
         }
         item {
             BreedImageGrid(
-                state = state,
-                screenWidth = screenWidth,
+                breedImageState = breedImageState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp) // veya ihtiyaç duyduğunuz dinamik yükseklik
+                    .fillMaxWidth() // veya ihtiyaç duyduğunuz dinamik yükseklik
             )
         }
     }
 }
+
 @Composable
 fun BreedImageGrid(
-    state: BreedDetailImageState,
+    breedImageState: BreedDetailImageState,
     modifier: Modifier = Modifier,
-    screenWidth: Dp
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(horizontal = screenWidth * 0.0179f),
-        horizontalArrangement = Arrangement.spacedBy(screenWidth * 0.04f),
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
+            .fillMaxWidth()
+            .sizeIn(maxHeight = 790.dp, minHeight = 250.dp)
     ) {
-        items(state.breedImage) { breedImage ->
+        items(breedImageState.breedImage) { breed ->
             BreedImageCard(
-                screenWidth = screenWidth,
-                breedImage = breedImage,
+                breedImage = breed.url,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
+                    .padding(2.dp)
             )
         }
     }
 }
+
 @Composable
 fun BreedImageCard(
     modifier: Modifier = Modifier,
-    screenWidth: Dp,
-    breedImage: CatBreedImage
+    breedImage: String
 ) {
     Surface(
         modifier = modifier,
@@ -233,10 +298,11 @@ fun BreedImageCard(
     ) {
         Column {
             Image(
-                painter = rememberAsyncImagePainter(breedImage.url),
+                painter = rememberAsyncImagePainter(breedImage),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(screenWidth * 0.4602f)
+                modifier = Modifier
+                    .aspectRatio(1f)
             )
         }
     }

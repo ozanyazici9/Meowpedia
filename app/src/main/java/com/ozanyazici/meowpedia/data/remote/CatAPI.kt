@@ -11,6 +11,7 @@ interface CatAPI {
     //https://api.thecatapi.com/v1/breeds
     //https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=beng&api_key=REPLACE_ME
     //https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=beng
+    //https://api.thecatapi.com/v1/breeds/beng*ids
 
     @GET("v1/breeds")
     suspend fun getBreeds(): BreedsDto

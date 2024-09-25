@@ -2,6 +2,7 @@ package com.ozanyazici.meowpedia.presentation.breeds
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ozanyazici.meowpedia.domain.model.Breed
@@ -15,14 +16,22 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class BreedsViewModel @Inject constructor(private val getBreedsUseCase: GetBreedsUseCase): ViewModel() {
+class BreedViewModel @Inject constructor(
+    private val getBreedsUseCase: GetBreedsUseCase,
+    private val savedStateHandle: SavedStateHandle
+): ViewModel() {
 
-    private val _state = mutableStateOf(BreedsState())
-    val state: State<BreedsState> = _state
+    private val _breedState = mutableStateOf(BreedState())
+    val breedState: State<BreedState> = _breedState
 
     private var allList: List<Breed>? = emptyList()
-
     private var job: Job? = null
+
+    var searchText: String
+        get() = savedStateHandle.get<String>("searchText") ?: ""
+        set(value) {
+            savedStateHandle.set("searchText", value)
+        }
 
     init {
         getBreeds()
@@ -30,18 +39,17 @@ class BreedsViewModel @Inject constructor(private val getBreedsUseCase: GetBreed
 
     private fun getBreeds() {
         job?.cancel()
-
         job = getBreedsUseCase.executeGetBreeds().onEach {
             when(it) {
                 is Resource.Success -> {
-                    _state.value = _state.value.copy(breeds = it.data ?: emptyList(), isLoading = false)
+                    _breedState.value = _breedState.value.copy(breeds = it.data ?: emptyList(), isLoading = false)
                     allList = it.data
                 }
-                is Resource.Error -> {
-                    _state.value = _state.value.copy(error = it.message ?: "Error!")
-                }
                 is Resource.Loading -> {
-                    _state.value = _state.value.copy(isLoading = true)
+                    _breedState.value = _breedState.value.copy(isLoading = true)
+                }
+                is Resource.Error -> {
+                    _breedState.value = _breedState.value.copy(isLoading = false, error = "Error")
                 }
             }
         }.launchIn(viewModelScope)
@@ -50,6 +58,7 @@ class BreedsViewModel @Inject constructor(private val getBreedsUseCase: GetBreed
     fun onEvent(event: BreedsEvent) {
         when(event) {
             is BreedsEvent.Search -> {
+                searchText = event.searchString
                 val searchString = event.searchString.lowercase(Locale.getDefault())
                 val filteredList = if (searchString.isEmpty()) {
                     allList ?: emptyList()
@@ -60,7 +69,7 @@ class BreedsViewModel @Inject constructor(private val getBreedsUseCase: GetBreed
                         }
                     } ?: emptyList()
                 }
-                _state.value = _state.value.copy(breeds = filteredList, isLoading = false)
+                _breedState.value = _breedState.value.copy(breeds = filteredList, isLoading = false)
             }
         }
     }
@@ -83,23 +92,3 @@ is BreedsEvent.Search -> {
     _state.value = _state.value.copy(breeds = filteredList, isLoading = false)
 }
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.ozanyazici.meowpedia"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.ozanyazici.meowpedia"
@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.text.google.fonts)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,7 +71,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Compose dependencies
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.17.0")
 
@@ -79,7 +80,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Coroutine Lifecycle Scopes
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
     implementation (libs.androidx.lifecycle.runtime.ktx)
 
     //Dagger - Hilt
@@ -97,5 +98,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 
     // Coil Asenkron resim indirme
-    implementation ("io.coil-kt:coil-compose:2.2.2")
+    implementation ("io.coil-kt:coil-compose:2.6.0")
+
+    // Google Font
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.8")
 }
