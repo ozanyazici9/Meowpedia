@@ -3,8 +3,11 @@ package com.ozanyazici.meowpedia.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -58,38 +61,43 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MeowpediaTheme {
-                val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = {
-                        MeowpediaNavigationBar(
-                            onClickNavigationBar = {
-                                navController.navigateSingleTopTo(Screen.BreedScreen.route)
-                            }
-                        )
-                    }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.BreedScreen.route,
-                        modifier = Modifier.padding(innerPadding)  // Scaffold padding
-                    ) {
-                        composable(route = Screen.BreedScreen.route) {
-                            BreedScreen(
-                                onClickBreedCard = { breed ->
-                                    navController.navigateBreedDetail(breed)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController = rememberNavController()
+                    Scaffold(
+                        bottomBar = {
+                            MeowpediaNavigationBar(
+                                onClickNavigationBar = {
+                                    navController.navigateSingleTopTo(Screen.BreedScreen.route)
                                 }
                             )
                         }
-
-                        composable(
-                            Screen.BreedDetailScreen.route +
-                                    "/{${BREED_ID}}" + "/{${BREED_NAME}}" +
-                                    "/{${TEMPERAMENT}}" + "/{${ORIGIN}}" +
-                                    "/{${COUNTRY_CODE}}" + "/{${DESCRIPTION}}" +
-                                    "/{${LIFE_SPAN}}" + "/{${REFERENCE_IMAGE_ID}}" +
-                                    "/{${WIKIPEDIA_URL}}"
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screen.BreedScreen.route,
+                            modifier = Modifier.padding(innerPadding)  // Scaffold padding
                         ) {
-                            BreedDetailScreen()
+                            composable(route = Screen.BreedScreen.route) {
+                                BreedScreen(
+                                    onClickBreedCard = { breed ->
+                                        navController.navigateBreedDetail(breed)
+                                    }
+                                )
+                            }
+
+                            composable(
+                                Screen.BreedDetailScreen.route +
+                                        "/{${BREED_ID}}" + "/{${BREED_NAME}}" +
+                                        "/{${TEMPERAMENT}}" + "/{${ORIGIN}}" +
+                                        "/{${COUNTRY_CODE}}" + "/{${DESCRIPTION}}" +
+                                        "/{${LIFE_SPAN}}" + "/{${REFERENCE_IMAGE_ID}}" +
+                                        "/{${WIKIPEDIA_URL}}"
+                            ) {
+                                BreedDetailScreen()
+                            }
                         }
                     }
                 }

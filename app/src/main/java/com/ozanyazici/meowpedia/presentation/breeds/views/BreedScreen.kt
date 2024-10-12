@@ -70,30 +70,30 @@ fun BreedScreen(
     val context = LocalContext.current
     val navController = rememberNavController()
 
-    if (breedState.error.isNotEmpty()) {
-        ErrorAlertDialog(
-            onConfirmation = {
-                (context as? MainActivity)?.finish()
-            },
-            dialogTitle = "Error",
-            dialogText = "No network connection. Connect to the network and try again",
-            icon = Icons.Default.Info
-        )
-    } else if (breedState.isLoading) {
-        ProgressIndicator(
-            modifier = Modifier.width(40.dp),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = Color.White
-        )
-    } else {
-        MeowpediaApp(
-            breedState = breedState,
-            onClickBreedCard = onClickBreedCard,
-            viewModel = viewModel,
-            navController = navController
-        )
+        if (breedState.error.isNotEmpty()) {
+            ErrorAlertDialog(
+                onConfirmation = {
+                    (context as? MainActivity)?.finish()
+                },
+                dialogTitle = "Error",
+                dialogText = "No network connection. Connect to the network and try again",
+                icon = Icons.Default.Info
+            )
+        } else if (breedState.isLoading) {
+            ProgressIndicator(
+                modifier = Modifier.width(40.dp),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = Color.White
+            )
+        } else {
+            MeowpediaApp(
+                breedState = breedState,
+                onClickBreedCard = onClickBreedCard,
+                viewModel = viewModel,
+                navController = navController
+            )
+        }
     }
-}
 
 @Composable
 fun MeowpediaApp(
@@ -300,4 +300,3 @@ fun BreedCard(
         }
         }
     }
-// Meowpedia yazısının yanında küçük pati resimleri

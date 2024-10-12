@@ -1,8 +1,6 @@
 package com.ozanyazici.meowpedia.presentation.ui.theme
 
-
 import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -38,15 +36,9 @@ private val LightColors = lightColorScheme(
 
 @Composable
 fun MeowpediaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        LightColors
-    } else {
-        LightColors
-    }
-
+    val colors = LightColors
 
     val view = LocalView.current
     if (!view.isInEditMode) {

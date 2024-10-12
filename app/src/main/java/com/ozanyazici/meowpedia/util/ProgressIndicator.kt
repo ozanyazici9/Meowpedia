@@ -15,11 +15,11 @@ fun ProgressIndicator(
     trackColor: Color
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize(),
     ) {
         CircularProgressIndicator(
-            modifier = modifier,
+            modifier = modifier
+                .align(Alignment.Center),
             color = color,
             trackColor = trackColor
         )
